@@ -14,8 +14,8 @@ jobs:
           sudo apt update -y
           wget https://github.com/gohugoio/hugo/releases/download/v0.105.0/hugo_0.105.0_linux-arm64.deb
           wget https://github.com/gohugoio/hugo/releases/download/v0.105.0/hugo_extended_0.105.0_linux-arm64.deb
-          sudo dpkg -i -y hugo_0.105.0_linux-arm64.deb 
-          sudo dpkg -i -y hugo_extended_0.105.0_linux-arm64.deb
+          sudo dpkg -i hugo_0.105.0_linux-arm64.deb 
+          sudo dpkg -i hugo_extended_0.105.0_linux-arm64.deb
           
       - name: Preprocessing Articles
         run: |
