@@ -24,7 +24,8 @@ jobs:
           git clone https://github.com/WorldObservationLog/wol-blog-hugo.git
           ls
           for i in *.md; do sed -i "1 i ---\ntitle: "$(basename $i .md)"\ndate: $(stat -c %w $i)\n---" $i; done
-          mv *.md wol-blog-hugo/content/posts
+          cp *.md wol-blog-hugo/content/posts
+          ls wol-blog-hugo/content/posts
         
       - name: Generate Site
         run: |
