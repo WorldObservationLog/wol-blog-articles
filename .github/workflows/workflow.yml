@@ -35,8 +35,9 @@ jobs:
           git config --global user.name "WorldObservationLog"
           git config --global init.defaultBranch main
           git init
+          git branch -M main
           git add .
           git commit -m "Update Site at $(date "+%Y%m%d-%H%M%S")"
-          git remote set-url origin https://${{secrets.TOKEN}}.github.com/WorldObservationLog/wol-blog.git
-          git pull --force
+          git remote add origin https://${{secrets.TOKEN}}.github.com/WorldObservationLog/wol-blog.git
+          git pull --force -u origin main
 
