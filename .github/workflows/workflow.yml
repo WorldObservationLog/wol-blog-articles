@@ -31,6 +31,9 @@ jobs:
       - name: Publish
         run: |
           cd wol-blog-hugo/public
+          git config --global user.email "wolc@duck.com"
+          git config --global user.name "WorldObservationLog"
+          git config --global init.defaultBranch main
           git init
           git add .
           git commit -m "Update Site at $(date "+%Y%m%d-%H%M%S")"
