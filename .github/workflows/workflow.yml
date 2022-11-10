@@ -1,0 +1,39 @@
+name: CI
+on:
+  push:
+    branches: [ "main" ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Hugo
+        run: |
+          sudo apt update -y
+          wget https://github.com/gohugoio/hugo/releases/download/v0.105.0/hugo_0.105.0_linux-arm64.deb
+          wget https://github.com/gohugoio/hugo/releases/download/v0.105.0/hugo_extended_0.105.0_linux-arm64.deb
+          sudo dpkg -i -y hugo_0.105.0_linux-arm64.deb 
+          sudo dpkg -i -y hugo_extended_0.105.0_linux-arm64.deb
+          
+      - name: Preprocessing Articles
+        run: |
+          git clone https://github.com/WorldObservationLog/wol-blog-hugo.git
+          for i in *.md; do sed -i "1 i ---\ntitle: "$(basename $i .md)"\ndate: $(stat -c %w $i)\n---" $i; done
+          mv *.md wol-blog-hugo/content/posts
+        
+      - name: Generate Site
+        run: |
+          cd wol-blog-hugo
+          hugo -D
+      
+      - name: Publish
+        run: |
+          cd public
+          git init
+          git add .
+          git commit -m "Update Site at $(date "+%Y%m%d-%H%M%S")"
+          git remote set-url origin https://${{secrets.TOKEN}}.github.com/WorldObservationLog/wol-blog.git
+          git pull --force
+
