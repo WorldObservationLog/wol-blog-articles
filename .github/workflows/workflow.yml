@@ -30,7 +30,7 @@ jobs:
       
       - name: Publish
         run: |
-          cd public
+          cd wol-blog-hugo/public
           git init
           git add .
           git commit -m "Update Site at $(date "+%Y%m%d-%H%M%S")"
