@@ -1,5 +1,3 @@
-# 基于 Hugo+GItHub Actions+Cloudflare Pages 的自构建博客系统的部署
-
 ## 前言
 
 Hexo，Hugo 相较于 Wordpress，Typecho 等一众以 PHP 为基础的 CMS 系统而言，存在内容发布困难的缺点。Typecho 发布新内容只需在后台编辑好内容点击发布即可，而 Hugo 等静态站点生成器需要将内容以 Markdown 格式放入指定文件夹，手动执行命令生成静态站点，再通过其他方式上传至网站目录，过程极为繁琐，且对多客户端用户不是很友善。本文提供一种基于 Hugo+GItHub Actions+Cloudflare Pages 的博客部署方式，能够将该过程大幅度简化。
@@ -69,7 +67,7 @@ git push -u origin
          - name: Preprocess Articles
            run: |
              git clone https://${{secrets.TOKEN}}@github.com/<CHANGE IT TO YOUR HUGO REPOSITORY URI!>
-             for i in *.md; do sed -i "1 i ---\ntitle: "$(basename $i .md)"\ndate: $(date -d @$(stat -c %w $i) --rfc-3339=seconds | sed 's/ /T/')\n---" $i; done
+             for i in *.md; do file_basename=$(basename "$i" .md); file_date=$(date -d @$(stat -c %W "$i") --rfc-3339=seconds | sed 's/ /T/'); metadata="---\ntitle: $file_basename\ndate: $file_date\n---"; firstline=$(head -n 1 "$i"); if [[ $firstline != -* ]]; then sed -i "1 i $metadata" "$i"; fi; done
              mkdir <CHANGE IT TO YOUR HUGO REPOSITORY NAME!>/content/posts
              cp *.md <CHANGE IT TO YOUR HUGO REPOSITORY NAME!>/content/posts
            
@@ -102,25 +100,25 @@ git push -u origin
    
    **What Happened ?**
    
-   这个配置文件中最难理解的或许是 `for i in *.md; do sed -i "1 i ---\ntitle: "$(basename $i .md)"\ndate: $(date -d @$(stat -c %w $i) --rfc-3339=seconds | sed 's/ /T/')\n---" $i; done` 一行，这实际上是一个压缩成一行的Bash脚本，展开后是这个样子：
+   这个配置文件中最难理解的或许是 `for i in *.md; do file_basename=$(basename "$i" .md); file_date=$(date -d @$(stat -c %W "$i") --rfc-3339=seconds | sed 's/ /T/'); metadata="---\ntitle: $file_basename\ndate: $file_date\n---"; firstline=$(head -n 1 "$i"); if [[ $firstline != -* ]]; then sed -i "1 i $metadata" "$i"; fi; done` 一行，这实际上是一个压缩成一行的Bash脚本，展开后是这个样子：
    
    ``` bash
-   for i in *.md
-   do
-   	sed -i "1 i ---\ntitle: "$(basename $i .md)"\ndate: $(date -d @$(stat -c %w $i) --rfc-3339=seconds | sed 's/ /T/')\n---"
-   done
+for i in *.md;
+    do
+        file_basename=$(basename "$i" .md);
+        file_date=$(date -d @$(stat -c %W "$i") --rfc-3339=seconds | sed 's/ /T/');
+        metadata="---\ntitle: $file_basename\ndate: $file_date\n---";
+        firstline=$(head -n 1 "$i");
+        if [[ $firstline != -* ]];
+        then
+            sed -i "1 i $metadata" "$i";
+        fi;
+    done
    ```
-   
-   而 sed命令所插入的其实是Hugo文章的Metadata，格式化后是这个样子
-   
-   ```toml
-   ---
-   title: "$(basename $i .md)"
-   date: $(date -d @$(stat -c %w $i) --rfc-3339=seconds | sed 's/ /T/')
-   ---
-   ```
-   
-   其中，`$(basename $i .md)` 表示使用文件名作为文章的标题， `$(date -d @$(stat -c %w $i) --rfc-3339=seconds | sed 's/ /T/')` 表示以文件创建日期作为文章的创建日期（TOML使用RFC-3339格式表示时间）
+
+　这是一个自动生成 Metadata 的 Bash 脚本，带有对自定义 Metadata 的检测功能。
+
+   其中，`$(basename "$i" .md)` 表示使用文件名作为文章的标题， `$(date -d @$(stat -c %w "$i") --rfc-3339=seconds | sed 's/ /T/')` 表示以文件创建日期作为文章的创建日期（TOML使用RFC-3339格式表示时间）
 
 ## 配置 Cloudflare Pages
 
@@ -138,8 +136,7 @@ git push -u origin
 
 这套部署方案相比于手动部署而言极大程度降低了工作量，但其仍然存在不足：
 
-1. 无法自定义Metadata
-2. 将Hugo的安装文件链接硬编码在了配置文件中
-3. 需要手动上传 Markdown 文件，较为繁琐
+1. 将Hugo的安装文件链接硬编码在了配置文件中
+2. 需要手动上传 Markdown 文件，较为繁琐
 
 简而言之，就是仍有改进空间，敬请期待
