@@ -102,8 +102,8 @@ git push -u origin
    
    这个配置文件中最难理解的或许是 `for i in *.md; do file_basename=$(basename "$i" .md); file_date=$(date -d @$(stat -c %W "$i") --rfc-3339=seconds | sed 's/ /T/'); metadata="---\ntitle: $file_basename\ndate: $file_date\n---"; firstline=$(head -n 1 "$i"); if [[ $firstline != -* ]]; then sed -i "1 i $metadata" "$i"; fi; done` 一行，这实际上是一个压缩成一行的Bash脚本，展开后是这个样子：
    
-   ``` bash
-for i in *.md;
+   ```bash
+   for i in *.md;
     do
         file_basename=$(basename "$i" .md);
         file_date=$(date -d @$(stat -c %W "$i") --rfc-3339=seconds | sed 's/ /T/');
