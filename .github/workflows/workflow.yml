@@ -30,6 +30,7 @@ jobs:
       - name: Generate Site
         run: |
           cd wol-blog-hugo
+          for i in posts/content/posts/*.md; do cat "$i"; done
           hugo -D
       
       - name: Publish
