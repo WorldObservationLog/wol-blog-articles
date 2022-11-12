@@ -23,8 +23,7 @@ jobs:
       - name: Preprocessing Articles
         run: |
           git clone https://${{secrets.TOKEN}}@github.com/WorldObservationLog/wol-blog-hugo.git
-          export IFS='\n'
-          for i in *.md; do sed -i "1 i ---\ntitle: $(basename $i .md)\ndate: $(date -d @$(stat -c %W $i) --rfc-3339=seconds | sed 's/ /T/')\n---" "$i"; done
+          for i in *.md; do sed -i "1 i ---\ntitle: $(basename \"$i\" .md)\ndate: $(date -d @$(stat -c %W \"$i\") --rfc-3339=seconds | sed 's/ /T/')\n---" "$i"; done
           mkdir wol-blog-hugo/content/posts
           cp *.md wol-blog-hugo/content/posts
         
