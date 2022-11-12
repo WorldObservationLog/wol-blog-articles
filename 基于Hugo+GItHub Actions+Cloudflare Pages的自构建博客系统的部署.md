@@ -67,7 +67,7 @@ git push -u origin
          - name: Preprocess Articles
            run: |
              git clone https://${{secrets.TOKEN}}@github.com/<CHANGE IT TO YOUR HUGO REPOSITORY URI!>
-             for i in *.md; do file_basename=$(basename "$i" .md); file_date=$(date -d @$(stat -c %W "$i") --rfc-3339=seconds | sed 's/ /T/'); metadata="---\ntitle: $file_basename\ndate: $file_date\n---"; firstline=$(head -n 1 "$i"); if [[ $firstline != -* ]]; then sed -i "1 i $metadata" "$i"; fi; done
+             for i in *.md; do file_basename=$(basename "$i" .md); file_date=$(date -d @$(git log --follow --format=%at --date default "$i" | tail -1) --rfc-3339=seconds | sed 's/ /T/'); metadata="---\ntitle: $file_basename\ndate: $file_date\n---"; firstline=$(head -n 1 "$i"); if [[ $firstline != -* ]]; then sed -i "1 i $metadata" "$i"; fi; done
              mkdir <CHANGE IT TO YOUR HUGO REPOSITORY NAME!>/content/posts
              cp *.md <CHANGE IT TO YOUR HUGO REPOSITORY NAME!>/content/posts
            
@@ -102,7 +102,7 @@ git push -u origin
    
    这个配置文件中最难理解的或许是
 
-   `for i in *.md; do file_basename=$(basename "$i" .md); file_date=$(date -d @$(stat -c %W "$i") --rfc-3339=seconds | sed 's/ /T/'); metadata="---\ntitle: $file_basename\ndate: $file_date\n---"; firstline=$(head -n 1 "$i"); if [[ $firstline != -* ]]; then sed -i "1 i $metadata" "$i"; fi; done`
+   `for i in *.md; do file_basename=$(basename "$i" .md); file_date=$(date -d @$(git log --follow --format=%at --date default "$i" | tail -1) --rfc-3339=seconds | sed 's/ /T/'); metadata="---\ntitle: $file_basename\ndate: $file_date\n---"; firstline=$(head -n 1 "$i"); if [[ $firstline != -* ]]; then sed -i "1 i $metadata" "$i"; fi; done`
 
    一行，这实际上是一个压缩成一行的Bash脚本，展开后是这个样子：
    
@@ -110,7 +110,7 @@ git push -u origin
     for i in *.md;
     do
         file_basename=$(basename "$i" .md);
-        file_date=$(date -d @$(stat -c %W "$i") --rfc-3339=seconds | sed 's/ /T/');
+        file_date=$(date -d @$(git log --follow --format=%at --date default "$i" | tail -1) --rfc-3339=seconds | sed 's/ /T/');
         metadata="---\ntitle: $file_basename\ndate: $file_date\n---";
         firstline=$(head -n 1 "$i");
         if [[ $firstline != -* ]];
@@ -122,7 +122,7 @@ git push -u origin
 
    这是一个自动生成 Metadata 的 Bash 脚本，带有对自定义 Metadata 的检测功能。
 
-   其中，`$(basename "$i" .md)` 表示使用文件名作为文章的标题， `$(date -d @$(stat -c %w "$i") --rfc-3339=seconds | sed 's/ /T/')` 表示以文件创建日期作为文章的创建日期（TOML使用RFC-3339格式表示时间）
+   其中，`$(basename "$i" .md)` 表示使用文件名作为文章的标题， `$(date -d @$(git log --follow --format=%at --date default "$i" | tail -1) --rfc-3339=seconds | sed 's/ /T/')` 表示以文件创建日期作为文章的创建日期（TOML使用RFC-3339格式表示时间）
 
 ## 配置 Cloudflare Pages
 
