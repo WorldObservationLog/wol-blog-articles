@@ -23,14 +23,13 @@ jobs:
       - name: Preprocessing Articles
         run: |
           git clone https://${{secrets.TOKEN}}@github.com/WorldObservationLog/wol-blog-hugo.git
-          for i in *.md; do sed -i "1 i ---\ntitle: $(basename \"$i\" .md)\ndate: $(date -d @$(stat -c %W \"$i\") --rfc-3339=seconds | sed 's/ /T/')\n---" "$i"; done
+          for i in *.md; do file_basename=$(basename "$i" .md); file_date=$(date -d @$(stat -c %W "$i") --rfc-3339=seconds | sed 's/ /T/'); metadata="---\ntitle: $file_basename\ndate: $file_date\n---"; firstline=$(head -n 1 "$i"); if [[ $firstline != -* ]]; then sed -i "1 i $metadata" "$i"; fi; done
           mkdir wol-blog-hugo/content/posts
           cp *.md wol-blog-hugo/content/posts
         
       - name: Generate Site
         run: |
           cd wol-blog-hugo
-          for i in content/posts/*.md; do cat "$i"; done
           hugo -D
       
       - name: Publish
