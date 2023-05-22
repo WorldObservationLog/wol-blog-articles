@@ -36,7 +36,7 @@ jobs:
       - name: Generate Site
         run: |
           cd wol-blog-hugo
-          hugo -D
+          hugo
       
       - name: Publish
         run: |
