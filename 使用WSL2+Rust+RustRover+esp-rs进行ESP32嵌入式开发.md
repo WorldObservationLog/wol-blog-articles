@@ -28,10 +28,10 @@ $ cargo install --git https://github.com/SergioGasquez/espflash --branch fix/res
 $ espup install # be patient
 $ . $HOME/export-esp.sh
 ```
-{{% notice note %}}
+go {{< notice tip >}}
 由于espflash目前版本存在错误，此处使用了[SergioGasquez/espflash](https://github.com/SergioGasquez/espflash/tree/fix/resets)修改版本，详情可参考[esp-rs/espflash #487](https://github.com/esp-rs/espflash/pull/487)
 此错误预计将在`espflash 3.0.0`版本中修复，届时可使用`cargo install cargo-espflash espflash`安装官方版本。
-{{% /notice %}}
+{{< /notice >}} 
 ### 安装驱动
 WSL2默认内核不预载任何驱动，开发者需自行安装。此处以CH340/CH341芯片驱动为例。
 ```
