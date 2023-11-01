@@ -1,11 +1,14 @@
 *本文创作于2023-10-31，其中所提及的内容在您阅读时可能已发生改变。*
+
 最近买了块ESP32，打算入门Rust嵌入式开发。由于Windows上存在最大路径限制：
 ```
 Error: Too long output directory: `**FILLTER**`. Shorten your project path down to no more than 10 characters (or use WSL2 and its native Linux filesystem). Note that tricks like Windows `subst` do NOT work!
 ```
 且命令行提示也推荐使用WSL2，所以试着通过WSL2进行开发。踩的坑实在是太多，特此记录。
+
 ## 环境准备
 ### 内核准备
+
 在Windows Store安装Ubuntu，启动并进行设置后，执行`uname -a`：
 ```
 $ uname -a
@@ -30,6 +33,7 @@ $ . $HOME/export-esp.sh
 ```
 go {{< notice tip >}}
 由于espflash目前版本存在错误，此处使用了[SergioGasquez/espflash](https://github.com/SergioGasquez/espflash/tree/fix/resets)修改版本，详情可参考[esp-rs/espflash #487](https://github.com/esp-rs/espflash/pull/487)
+
 此错误预计将在`espflash 3.0.0`版本中修复，届时可使用`cargo install cargo-espflash espflash`安装官方版本。
 {{< /notice >}} 
 ### 安装驱动
@@ -105,6 +109,9 @@ Projects -> Open -> Home Directory in WSL -> 选择项目文件夹 -> OK
 点击 Run 'Run' 即可自动编译烧录，由于RustRover终端限制，无法显示进度条。
 ## 参考文档
 https://devblogs.microsoft.com/commandline/connecting-usb-devices-to-wsl/
+
 https://github.com/dorssel/usbipd-win/wiki/WSL-support
+
 https://github.com/esp-rs/esp-idf-template#prerequisites
+
 http://www.elelab.net/linux-ch34x-driver.html
