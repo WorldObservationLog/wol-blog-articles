@@ -15,20 +15,14 @@ jobs:
       - name: Install Hugo
         run: |
           sudo apt update -y
-          wget https://github.com/gohugoio/hugo/releases/download/v0.105.0/hugo_0.105.0_linux-amd64.deb
-          wget https://github.com/gohugoio/hugo/releases/download/v0.105.0/hugo_extended_0.105.0_linux-amd64.deb
-          sudo dpkg -i hugo_0.105.0_linux-amd64.deb 
-          sudo dpkg -i hugo_extended_0.105.0_linux-amd64.deb
-
-      - name: Install zhlint
-        run: |
-          sudo apt install nodejs
-          npm install zhlint -g
+          wget https://github.com/gohugoio/hugo/releases/download/v0.120.2/hugo_0.120.2_linux-amd64.deb
+          wget https://github.com/gohugoio/hugo/releases/download/v0.120.2/hugo_extended_0.120.2_linux-amd64.deb
+          sudo dpkg -i hugo_0.120.2_linux-amd64.deb 
+          sudo dpkg -i hugo_extended_0.120.2_linux-amd64.deb
           
       - name: Preprocessing Articles
         run: |
           git clone https://${{secrets.TOKEN}}@github.com/WorldObservationLog/wol-blog-hugo.git
-          for i in *.md; do zhlint "$i" --fix; done
           for i in *.md; do file_basename=$(basename "$i" .md); file_date=$(date -d @$(git log -1 --pretty="format:%ct" "$i") --rfc-3339=seconds | sed 's/ /T/'); metadata="---\ntitle: \"$file_basename\"\ndate: $file_date\n---"; firstline=$(head -n 1 "$i"); if [[ $firstline != -* ]]; then sed -i "1 i $metadata" "$i"; fi; done
           mkdir wol-blog-hugo/content/posts
           cp *.md wol-blog-hugo/content/posts
