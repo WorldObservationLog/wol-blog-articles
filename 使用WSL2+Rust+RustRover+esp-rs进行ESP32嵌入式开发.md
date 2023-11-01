@@ -2,7 +2,8 @@
 
 最近买了块ESP32，打算入门Rust嵌入式开发。由于Windows上存在最大路径限制：
 ```
-Error: Too long output directory: `**FILLTER**`. Shorten your project path down to no more than 10 characters (or use WSL2 and its native Linux filesystem). Note that tricks like Windows `subst` do NOT work!
+Error: Too long output directory: `**FILTER**`.
+Shorten your project path down to no more than 10 characters (or use WSL2 and its native Linux filesystem). Note that tricks like Windows `subst` do NOT work!
 ```
 且命令行提示也推荐使用WSL2，所以试着通过WSL2进行开发。踩的坑实在是太多，特此记录。
 
