@@ -22,7 +22,7 @@ Telegram的动画表情在Adobe After Effects中体现为多个形状图层的�
 向[@Stickerdownloadbot](https://t.me/Stickerdownloadbot)发送动画表情后，Bot将返回三种格式的文件。此处下载最后一种，文件名以tgs开头的压缩包，解压后可得到.tgs文件。
 ![Pasted image 20240102110517.png](https://s2.loli.net/2024/01/02/YeXiCVmvIWgj84n.png)
 
-打开(lottie-editor)[https://michielp1807.github.io/lottie-editor/#/]，导入.tgs文件，确认动画正常后点击`Save as Lottie/JSON`按钮，即可获得可导入Adobe After Effects的Lottie/JSON格式动画。
+打开[lottie-editor](https://michielp1807.github.io/lottie-editor/)，导入.tgs文件，确认动画正常后点击`Save as Lottie/JSON`按钮，即可获得可导入Adobe After Effects的Lottie/JSON格式动画。
 ![Pasted image 20240102110839.png](https://s2.loli.net/2024/01/02/RoPptKLOi13AuXN.png)
 
 ## 2. 导入文件
